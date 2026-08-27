@@ -2,12 +2,12 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export class User extends Model {
-    public id!: number;
-    public nome!: string;
-    public email!: string;
-    public senha_hash!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+  public id!: number;
+  public nome!: string;
+  public email!: string;
+  public senha_hash!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 User.init(
@@ -36,4 +36,4 @@ User.init(
     tableName: 'users',
     timestamps: true
   }
-)
+);
