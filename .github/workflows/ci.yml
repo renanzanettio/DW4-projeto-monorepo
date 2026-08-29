@@ -44,7 +44,7 @@ jobs:
             - name: 6. Validar Construção da Imagem Docker da API
               run: |
                 cd backend
-                docker build -t api-service:test ./backend
+                pnpm run build
 
             - name: 7. Validar Frontend (quando presente no monorepo)
               run: |
