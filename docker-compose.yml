@@ -6,15 +6,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-    ports:
+    ports: 
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  api:
-    build:
+  api: 
+    build: 
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile # configuração minusculo, nome do arq maiusculo
     container_name: api-service
     ports:
       - "3000:3000"
@@ -26,12 +26,19 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_DIALECT=postgres
-      - DB_SSL=false
+      - DB_SSL=false # roda localmente, não no supabase
+      - NODE_ENV=development
+      - CI=true
+      # habilitar o polling para detectar alterações de arquivos no windows (soluciona problemas de acesso)
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=500
     depends_on:
       - db
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - backend_node_modules:/app/node_modules # não deixa que o node_modules do windows interfira no do linux
+    command: pnpm dev
 
 volumes:
   pgdata:
+  backend_node_modules:

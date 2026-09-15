@@ -4,10 +4,11 @@
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
+    "resolveJsonModule": true, // para poder importar esse arquivo e importar o swagger
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "eslint.config.mjs"]
 }
