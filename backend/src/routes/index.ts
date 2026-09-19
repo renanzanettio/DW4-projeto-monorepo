@@ -6,7 +6,7 @@ const router = Router();
 
 router.use('/auth', authRoutes);
 
-// Registra as rotas de usuário sob prefixo / user
+// Registra as rotas de usuários sob o prefixo /users
 router.use('/users', userRoutes);
 
 export { router as appRoutes };

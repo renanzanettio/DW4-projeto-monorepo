@@ -1,3 +1,17 @@
-.env
+# Dependências e caches
 node_modules/
-backend/root/
+**/node_modules/
+.pnpm-store/
+**/.pnpm-store/
+.local/
+**/.local/
+
+# Builds e arquivos gerados
+.next/
+dist/
+build/
+
+# Ambientes e arquivos temporários
+.env
+.env*.local
+*.zip

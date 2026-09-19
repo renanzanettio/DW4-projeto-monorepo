@@ -1,15 +1,14 @@
-import './App.css'
-import { Button } from './components/Button'
-
+import "./App.css";
+import { Button } from "./components/Button";
 
 function App() {
   return (
     <>
-      <Button variant='primary'>clica em mim</Button>
-      <Button variant='secondary'>clica em mim</Button>
-      <Button variant='danger'>clica em mim</Button>
+      <Button>Cadastrar</Button>
+      <Button variant="secondary">Resetar</Button>
+      <Button variant="danger">Deletar</Button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
