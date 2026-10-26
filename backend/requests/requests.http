@@ -11,14 +11,14 @@ Content-Type: application/json
 {
     "nome": "Mariana Souza",
     "email": "mariana.souza@email.com",
-    "password": "12345678"
+    "password": "123456"
 }
 
 ### Buscar Usuario por ID
-GET http://localhost:3000/api/users/1
+GET http://localhost:3000/api/users/6
 
 ### Atualizar Usuario
-PUT http://localhost:3000/api/users/1
+PUT http://localhost:3000/api/users/6
 Content-Type: application/json
 
 {
@@ -27,4 +27,4 @@ Content-Type: application/json
 }
 
 ### Excluir Usuario
-DELETE http://localhost:3000/api/users/1
+DELETE http://localhost:3000/api/users/6
