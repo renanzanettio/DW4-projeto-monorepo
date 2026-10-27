@@ -1,11 +1,8 @@
-// criação da instancia do express
-// retorna as rotas usando o app
-
 import express, { Request, Response } from 'express';
-import cors from 'cors'; // serve para tentar acessar uma rota que esta em outro dominio
-import { appRoutes } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './docs/swagger.json';
+import cors from 'cors';
+import { appRoutes } from './routes';
 
 const app = express();
 
@@ -22,10 +19,10 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// Registra todas as rotas da aplicacao sob o prefixo /api
-app.use('/api', appRoutes);
-
 // Rota da documentação interativa
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Registra todas as rotas da aplicacao sob o prefixo /api
+app.use('/api', appRoutes);
 
 export { app };

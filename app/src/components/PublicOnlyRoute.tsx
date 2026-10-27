@@ -8,7 +8,6 @@ export function PublicOnlyRoute() {
     return null;
   }
 
-  // Usuário autenticado não precisa acessar a tela de login
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

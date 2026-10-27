@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   isValidEmail,
   isStrongPassword,
-  validateUserInput,
   UserInput,
+  validateUserInput,
+  //validateUserInput,
+  //UserInput,
 } from './validators';
 
 describe('Módulo de Validação: validators.ts', () => {
@@ -95,7 +97,7 @@ describe('Módulo de Validação: validators.ts', () => {
       // Assert
       expect(validation.isValid).toBe(false);
       expect(validation.errors).toContain(
-        'O nome deve conter no mínimo 3 caracteres',
+        'O nome deve conter no mínimo 3 caracteres.',
       );
     });
 
@@ -113,7 +115,7 @@ describe('Módulo de Validação: validators.ts', () => {
       // Assert
       expect(validation.isValid).toBe(false);
       expect(validation.errors).toContain(
-        'O perfil de acesso informado é inválido',
+        'O Perfil de acesso informado é inválido.',
       );
     });
   });

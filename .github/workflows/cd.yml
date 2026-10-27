@@ -1,0 +1,98 @@
+name: Monorepo CD Pipeline (Entrega de Produção)
+
+on:
+  # Publica somente depois que o CI do push na main for aprovado
+  workflow_run:
+    workflows: ["Monorepo CI Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cd-production
+  cancel-in-progress: false
+
+jobs:
+  verificar-configuracao:
+    name: Verificar Configuração da Publicação
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    outputs:
+      habilitado: ${{ steps.configuracao.outputs.habilitado }}
+    steps:
+      - name: Verificar Secrets do Docker Hub
+        id: configuracao
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+            echo "habilitado=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Publicação não executada. Configure DOCKERHUB_USERNAME e DOCKERHUB_TOKEN nos secrets."
+            echo "### Docker Hub: imagem não publicada (secrets ausentes)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "habilitado=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  publicar-imagem-docker:
+    name: Compilar e Publicar Imagem no Docker Hub
+    needs: [verificar-configuracao]
+    if: needs.verificar-configuracao.outputs.habilitado == 'true'
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_VALIDADO: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+    steps:
+      - name: 1. Checkout do Código-Fonte Validado
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_VALIDADO }}
+
+      - name: 2. Configurar QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 3. Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 4. Autenticar no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 5. Extrair Metadados e Tags para o Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        env:
+          DOCKER_METADATA_PR_HEAD_SHA: 'false'
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/fatec-backend-api
+          tags: |
+            type=raw,value=latest
+            type=raw,value=sha-${{ env.COMMIT_VALIDADO }}
+
+      - name: 6. Compilar e Publicar Imagem com Cache
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 7. Resumo da Entrega
+        env:
+          IMAGEM: ${{ secrets.DOCKERHUB_USERNAME }}/fatec-backend-api
+        run: |
+          echo "### Entrega Contínua Concluída" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Imagem: \`$IMAGEM:latest\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit validado: \`$COMMIT_VALIDADO\`" >> "$GITHUB_STEP_SUMMARY"

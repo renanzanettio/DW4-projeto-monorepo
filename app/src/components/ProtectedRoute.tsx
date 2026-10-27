@@ -8,7 +8,10 @@ export function ProtectedRoute() {
   // 1. Estado transitório: Aguarda a verificação do LocalStorage
   if (isLoading) {
     return (
-      <div role="status" className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+      <div
+        role="status"
+        className="min-h-screen flex flex-col items-center justify-center bg-slate-50"
+      >
         <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
         <p className="mt-4 text-sm font-medium text-slate-600">
           Verificando credenciais de acesso...

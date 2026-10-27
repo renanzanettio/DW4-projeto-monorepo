@@ -3,6 +3,7 @@ import { AuthProvider } from "./contexts/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicOnlyRoute } from "./components/PublicOnlyRoute";
 import { AppLayout } from "./components/AppLayout";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
@@ -13,12 +14,10 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Rotas abertas apenas para usuários deslogados */}
           <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<Login />} />
           </Route>
 
-          {/* Rotas protegidas com layout compartilhado */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
@@ -26,10 +25,10 @@ export default function App() {
             </Route>
           </Route>
 
-          {/* Rota padrão para endereços não encontrados */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </AuthProvider>
   );
 }

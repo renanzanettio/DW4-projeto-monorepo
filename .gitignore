@@ -1,2 +1,9 @@
 node_modules
 .pnpm-store
+dist/
+coverage/
+.scannerwork/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example

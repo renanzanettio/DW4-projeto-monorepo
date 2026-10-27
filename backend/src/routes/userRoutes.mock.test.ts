@@ -68,9 +68,9 @@ describe('Testes de Rotas com Mocking do Model User', () => {
     // Assert
     expect(response.status).toBe(400);
     expect(response.body.erro).toBe(
-      'Já existe um usuário cadastrado com este e-mail',
+      'Já existe um usuário cadastrado com este e-mail.',
     );
-    // Garante que o metodo create NUNCA foi chamado apos a deteccao do conflito no codigo
+    // Garante que o metodo create NUNCA foi chamado apos a deteccao do conflito
     expect(User.create).not.toHaveBeenCalled();
   });
 });

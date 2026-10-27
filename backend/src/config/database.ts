@@ -9,7 +9,7 @@ export const sequelize = isTestEnvironment
   ? new Sequelize({
       dialect: 'sqlite',
       storage: ':memory:',
-      logging: false,
+      logging: false, // Desativa logs SQL no terminal durante os testes para manter a saida limpa
     })
   : new Sequelize(
       process.env.DB_NAME || 'fatec_db',
